@@ -1,63 +1,74 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // --- LÓGICA DO MENU MOBILE ---
   const hamburger = document.querySelector(".hamburger");
   const navMenu = document.querySelector(".nav-menu");
 
+  // 1. Abrir/Fechar Menu Principal
   if (hamburger && navMenu) {
     hamburger.addEventListener("click", () => {
       hamburger.classList.toggle("active");
       navMenu.classList.toggle("active");
     });
+  }
 
-    // Fecha o menu ao clicar em um link
-    document.querySelectorAll(".nav-menu li a").forEach((n) =>
+  // 2. Lógica para Dropdowns no Mobile (O Evento / Programação)
+  const dropdownLinks = document.querySelectorAll(".has-submenu > a");
+
+  dropdownLinks.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      // Se a tela for de celular (menor que 768px)
+      if (window.innerWidth <= 768) {
+        e.preventDefault(); // Impede que a página pule para o topo
+        const parentLi = link.parentElement;
+
+        // Fecha outros menus abertos para não bagunçar
+        document.querySelectorAll(".has-submenu").forEach((item) => {
+          if (item !== parentLi) {
+            item.classList.remove("active-submenu");
+          }
+        });
+
+        // Abre/Fecha o menu clicado
+        parentLi.classList.toggle("active-submenu");
+      }
+    });
+  });
+
+  // 3. Fechar menu ao clicar em links finais
+  document
+    .querySelectorAll(".submenu li a, .nav-menu > li > a:not([href='#'])")
+    .forEach((n) => {
       n.addEventListener("click", () => {
         hamburger.classList.remove("active");
         navMenu.classList.remove("active");
-      })
-    );
-  }
+        // Fecha submenus também
+        document
+          .querySelectorAll(".has-submenu")
+          .forEach((item) => item.classList.remove("active-submenu"));
+      });
+    });
 
-  // --- LÓGICA DE SCROLL HEADER (Muda estilo ao rolar) ---
-  const header = document.querySelector("header");
+  // 4. Header Sombra ao Rolar
+  const header = document.querySelector("main-header");
   window.addEventListener("scroll", () => {
-    if (window.scrollY > 50) {
-      header.classList.add("scrolled");
-    } else {
-      header.classList.remove("scrolled");
+    if (header) {
+      if (window.scrollY > 50) {
+        header.classList.add("scrolled");
+      } else {
+        header.classList.remove("scrolled");
+      }
     }
   });
 
-  // --- ANIMAÇÃO AO ROLAR (SCROLL REVEAL) ---
-  // Seleciona todos os elementos que devem ser animados
-  // Adicionamos a classe 'fade-in-up' via JS nos elementos principais para não poluir o HTML manualmente
-
-  // Vamos adicionar a classe de animação aos cards e títulos automaticamente
-  const elementsToAnimate = document.querySelectorAll(
-    ".info-card, .link-card, .gallery-item, .step-card, .section-title, .text-content p, .hero-text-overlay"
-  );
-
-  elementsToAnimate.forEach((el) => {
-    el.classList.add("fade-in-up");
-  });
-
-  // Configura o Observer (o "olheiro" do navegador)
-  const observerOptions = {
-    threshold: 0.1, // Dispara quando 10% do elemento estiver visível
-    rootMargin: "0px 0px -50px 0px", // Pequena margem para disparar antes do fim da tela
-  };
-
-  const observer = new IntersectionObserver((entries, observer) => {
+  // 5. Animação de Entrada (Scroll)
+  const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         entry.target.classList.add("visible");
-        observer.unobserve(entry.target); // Para de observar depois que animou
       }
     });
-  }, observerOptions);
-
-  // Manda o observer vigiar os elementos
-  document.querySelectorAll(".fade-in-up").forEach((el) => {
-    observer.observe(el);
   });
+
+  document
+    .querySelectorAll(".fade-in-up")
+    .forEach((el) => observer.observe(el));
 });
