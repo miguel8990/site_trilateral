@@ -23,6 +23,12 @@
   --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
+html,
+body {
+  overflow-x: hidden; /* O SEGREDO: Bloqueia qualquer rolagem horizontal */
+  width: 100%;
+  position: relative; /* Ajuda a conter elementos absolutos */
+}
 
 * {
   box-sizing: border-box;
@@ -271,12 +277,6 @@ section {
   border-radius: 2px;
 }
 
-.about-section p {
-  font-size: 1.1rem;
-  color: var(--text-light);
-  margin-bottom: 25px;
-}
-
 /* =========================================
    CARDS & GRID (Galeria, Links, Info)
    ========================================= */
@@ -380,14 +380,15 @@ section {
    SEÇÃO DE INSCRIÇÃO
    ========================================= */
 .registration-section {
-  background: linear-gradient(
-    135deg,
-    #1e3c72 0%,
-    #2a5298 100%
-  ); /* Gradiente azul profundo */
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
   color: var(--white);
   position: relative;
-  overflow: hidden;
+
+  /* O SEGREDO ESTÁ AQUI: */
+  height: auto !important; /* Força a altura a se adaptar ao conteúdo */
+  min-height: 100%; /* Garante que ocupe espaço */
+  overflow: visible !important; /* Deixa o conteúdo vazar se necessário, sem cortar */
+  padding-bottom: 100px; /* Espaço extra no final para o azul não acabar antes */
 }
 
 /* Círculos decorativos no fundo */
@@ -400,11 +401,17 @@ section {
   height: 300px;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 50%;
+  z-index: 0;
 }
 
 .registration-section .subtitle {
   color: #a8c0ff;
   font-size: 1.1rem;
+}
+.registration-wrapper,
+.section-title {
+  position: relative;
+  z-index: 1;
 }
 
 .step-number {
@@ -515,7 +522,102 @@ section {
   background-color: var(--text-dark);
   transition: all 0.3s ease-in-out;
 }
+/* =========================================
+   SEÇÃO DE BOAS-VINDAS (BEM-VINDO)
+   ========================================= */
 
+.welcome-section {
+  padding: 80px 0;
+  background-color: var(--white);
+}
+
+/* O Grid que separa imagens (esq) e texto (dir) */
+.welcome-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr; /* Texto ocupa um pouco mais de espaço */
+  gap: 50px;
+  align-items: center; /* Centraliza verticalmente */
+}
+
+/* Coluna das Imagens */
+.welcome-images {
+  display: flex;
+  flex-direction: column; /* Empilha uma foto em cima da outra */
+  gap: 20px;
+}
+
+.welcome-img {
+  width: 100%;
+  height: 250px; /* Altura fixa para ficarem iguais */
+  object-fit: cover; /* Corta a imagem para não esticar */
+  border-radius: 12px; /* Bordas arredondadas */
+  box-shadow: var(--shadow-md);
+  transition: transform 0.4s ease;
+}
+
+.welcome-img:hover {
+  transform: scale(1.02); /* Leve zoom ao passar o mouse */
+}
+
+/* Estilo do Texto */
+.welcome-text h2 {
+  font-family: var(--font-heading);
+  font-size: 3.5rem; /* Título bem grande e impactante */
+  color: #6a4a12; /* Tom marrom/dourado similar à referência */
+  margin-bottom: 25px;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+}
+
+.welcome-text p {
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  margin-bottom: 15px;
+  text-align: justify; /* Texto justificado para ficar elegante */
+}
+/* 1. Estilizando o H4 (Título interno do card) */
+.step-card h5 {
+  font-size: 1.05rem; /* Aumenta a fonte (padrão é aprox 1rem) */
+  color: var(--text-dark); /* Usa a cor vinho do tema */
+  margin-bottom: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* 2. Correção Definitiva dos Números */
+.step-card {
+  position: relative; /* OBRIGATÓRIO: Segura o número no lugar */
+  overflow: visible; /* Permite que o número "saia" para fora da borda */
+  /* ... mantenha suas outras configs de background/padding ... */
+}
+
+.step-number {
+  /* Posicionamento */
+  position: absolute;
+  top: -25px; /* Sobe metade para ficar na borda */
+  left: 20px;
+
+  /* Tamanho e Forma */
+  width: 50px;
+  height: 50px;
+  border-radius: 50%; /* Faz a bolinha perfeita */
+
+  /* Centralização Perfeita do Número */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Estilo Visual */
+  background-color: var(--secondary-color); /* Amarelo */
+  color: #fff;
+  font-family: var(--font-heading); /* Fonte Fredoka */
+  font-size: 1.5rem;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombrainha para dar relevo */
+  z-index: 10; /* Garante que fique por cima de tudo */
+  border: 3px solid #fff; /* Borda branca para destacar do fundo azul */
+}
 /* =========================================
    MEDIA QUERY (CELULAR) - VERSÃO CORRIGIDA
    ========================================= */
@@ -548,6 +650,7 @@ section {
     transform: translateX(100%);
     transition: transform 0.3s ease-in-out;
     overflow-y: auto; /* Permite rolar se o menu for grande */
+    overflow-x: hidden;
   }
 
   .nav-menu.active {
@@ -676,6 +779,27 @@ section {
     /* Centraliza e Gira -45 graus */
     transform: translate(-50%, -50%) rotate(-45deg);
   }
+  .steps-grid {
+    /* Transforma o grid em uma coluna única */
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* Espaço entre o cartão 1 e 2 */
+  }
+  .registration-wrapper {
+    margin-bottom: 20px;
+  }
+  .email-link {
+    font-size: 0.95rem !important; /* Diminui um pouco a fonte (estava muito grande) */
+    word-break: break-all; /* Permite quebrar o email em duas linhas se precisar */
+    overflow-wrap: break-word; /* Garante compatibilidade extra */
+    line-height: 1.4; /* Melhora a leitura se quebrar a linha */
+  }
+
+  /* Garante que a caixa pontilhada tenha espaço interno */
+  .email-box {
+    padding: 15px 10px; /* Reduz um pouco o padding lateral se necessário */
+    width: 100%; /* Garante que use a largura disponível */
+  }
 }
 
 /* Animação suave para o submenu */
@@ -687,5 +811,28 @@ section {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* --- RESPONSIVIDADE PARA CELULAR --- */
+@media (max-width: 768px) {
+  .welcome-grid {
+    grid-template-columns: 1fr; /* Vira uma coluna só */
+    gap: 30px;
+  }
+
+  .welcome-images {
+    flex-direction: row; /* No celular, coloca as fotos lado a lado (opcional) */
+    overflow-x: auto; /* Permite rolar se não couber */
+  }
+
+  .welcome-img {
+    height: 200px;
+    width: 80%; /* Fotos menores no celular */
+  }
+
+  .welcome-text h2 {
+    font-size: 2.5rem; /* Título menor no celular */
+    text-align: center;
   }
 }
