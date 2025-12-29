@@ -2,6 +2,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const hamburger = document.querySelector(".hamburger");
   const navMenu = document.querySelector(".nav-menu");
 
+  // ==========================================
+  // RASTREADOR DE MOUSE (PARA O FUNDO DINÂMICO)
+  // ==========================================
+  document.addEventListener("mousemove", (e) => {
+    const x = e.clientX;
+    const y = e.clientY;
+    // Envia as coordenadas para o CSS
+    document.body.style.setProperty("--mouse-x", `${x}px`);
+    document.body.style.setProperty("--mouse-y", `${y}px`);
+  });
+
   // 1. Abrir/Fechar Menu Principal
   if (hamburger && navMenu) {
     hamburger.addEventListener("click", () => {
@@ -71,4 +82,28 @@ document.addEventListener("DOMContentLoaded", () => {
   document
     .querySelectorAll(".fade-in-up")
     .forEach((el) => observer.observe(el));
+
+  // 6. Efeito de Onda (H1 e H2)
+  // Seleciona tanto o título quanto o subtítulo
+  const waveElements = document.querySelectorAll(
+    ".hero-text-overlay h1, .hero-text-overlay h2"
+  );
+
+  waveElements.forEach((element) => {
+    const text = element.textContent;
+    element.textContent = ""; // Limpa o texto original
+
+    // Recria letra por letra
+    text.split("").forEach((letter, index) => {
+      const span = document.createElement("span");
+      span.textContent = letter === " " ? "\u00A0" : letter;
+
+      // Dica Sênior: Se for H2, fazemos a onda ser um pouco mais rápida (0.05s) para diferenciar
+      const delay = element.tagName === "H2" ? index * 0.05 : index * 0.1;
+
+      span.style.animationDelay = `${delay}s`;
+      span.classList.add("letter-wave");
+      element.appendChild(span);
+    });
+  });
 });

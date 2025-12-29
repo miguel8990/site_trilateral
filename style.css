@@ -1,27 +1,25 @@
 @charset "UTF-8";
 
 :root {
-  /* Paleta de Cores */
-  --primary-color: #8d2c23;
-  --primary-dark: #5a1a15;
-  --secondary-color: #bb8a16;
-  --dark-green: #1101ee; /* Mantive sua cor original, mas sugiro rever para um verde floresta se quiser algo mais amazônico */
-  --accent-green: #2f3d16;
+  /* CORES PADRONIZADAS */
+  --primary-color: #470c05; /* Vinho Institucional */
+  --secondary-color: #bb8a16; /* Dourado Institucional */
 
-  --bg-light: #f8f9fa;
-  --text-dark: #2c3e50;
-  --text-light: #596275;
+  /* Cor do Texto: Um Azul Noite profundo (Melhor que preto puro) */
+  --text-color: #520707;
+  --text-light: #4a5568; /* Cinza para subtítulos */
+
+  /* Cores do Fundo Amazônico (Suaves) */
+  --bg-start: #e0f7fa; /* Água clara */
+  --bg-end: #a5d6a7; /* Verde mata suave */
+
+  /* SOMBRAS PADRONIZADAS (Para dar profundidade) */
+  --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --card-border: 1px solid rgba(255, 255, 255, 0.6);
   --white: #ffffff;
-
-  /* Fontes */
-  --font-heading: "Fredoka One", cursive;
-  --font-body: "Open Sans", sans-serif;
-
-  /* Transições Padrão */
-  --transition-fast: all 0.3s ease;
-  --transition-smooth: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-  --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.1);
+  /* FONTES */
+  --font-heading: "Playfair Display", serif; /* Elegante para Títulos */
+  --font-body: "Open Sans", sans-serif; /* Limpa para Leitura */
 }
 html,
 body {
@@ -43,10 +41,49 @@ body {
   margin: 0;
   padding: 0;
   font-family: var(--font-body);
-  color: var(--text-dark);
-  background-color: var(--bg-light);
-  line-height: 1.8; /* Melhor legibilidade */
-  overflow-x: hidden;
+  color: var(--text-color);
+  line-height: 1.8;
+
+  /* O GRADIENTE AMAZÔNICO VIBRANTE */
+  /* Aplicado APENAS aqui para garantir uniformidade total */
+  background: linear-gradient(
+    -45deg,
+    #0c795d,
+    /* Verde Escuro */ #48e780,
+    /* Verde Mata */ #349cc9,
+    /* Azul Petróleo */ #2e58ca,
+    #094ee0,
+    /* Azul Rio */ #2bb15e
+  );
+
+  /* Configuração da Animação */
+  background-size: 400% 400%;
+  animation: forestFlowBg 20s ease infinite;
+
+  /* O PULO DO GATO: O fundo fica fixo na janela do navegador */
+  background-attachment: fixed;
+
+  min-height: 100vh;
+}
+
+/* O Holofote do Mouse (Efeito de Luz/Vagalume) */
+body::before {
+  content: "";
+  position: fixed; /* Fica fixo na tela enquanto rola */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Fica atrás de tudo */
+  pointer-events: none; /* Não atrapalha o clique */
+
+  /* Um brilho radial suave que segue o mouse */
+  background: radial-gradient(
+    600px circle at var(--mouse-x) var(--mouse-y),
+    rgba(255, 255, 255, 0.15),
+    transparent 40%
+  );
+  transition: background 0.1s ease; /* Suaviza o movimento */
 }
 
 h1,
@@ -85,13 +122,37 @@ h3 {
    HEADER & NAV
    ========================================= */
 header {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px); /* Efeito de vidro fosco moderno */
-  box-shadow: var(--shadow-sm);
+  /* Fundo quase invisível, apenas um brilho */
+  background: rgba(255, 255, 255, 0.05);
+
+  /* O desfoque garante leitura sem esconder a cor do fundo */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  /* Removemos sombras duras */
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-bottom: none;
+
   position: sticky;
   top: 0;
   z-index: 1000;
-  transition: padding 0.3s ease;
+}
+
+/* Ajuste nos links do menu para ficarem visíveis no fundo escuro */
+nav ul li a {
+  color: #ffffff !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* Sombra no texto para ler em cima de qualquer cor */
+  font-weight: 700;
+}
+
+nav ul li a:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+}
+
+/* Ajuste do botão hambúrguer para branco (Mobile) */
+.bar {
+  background-color: #fff !important;
 }
 
 /* Estado do Header quando a página é rolada (JS adiciona essa classe) */
@@ -145,7 +206,7 @@ nav ul li a {
   display: block;
   padding: 10px 15px;
   text-decoration: none;
-  color: var(--text-dark);
+  color: var(--text-light);
   font-weight: 700;
   font-size: 0.95rem;
   text-transform: uppercase;
@@ -165,20 +226,45 @@ nav ul li a.active {
   position: absolute;
   top: 100%;
   left: 0;
-  background-color: var(--white);
-  box-shadow: var(--shadow-md);
-  min-width: 220px;
-  border-radius: 8px;
+
+  /* CORREÇÃO: Usando o fundo branco leitoso diretamente */
+  background-color: rgba(255, 255, 255, 0.95);
+
+  /* Efeito de Vidro */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  /* Sombra e Borda Padronizadas */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); /* Sombra mais forte para flutuar */
+  border: 1px solid rgba(255, 255, 255, 0.6);
+
+  min-width: 240px; /* Um pouco mais largo para os nomes dos eixos */
+  border-radius: 12px;
   padding: 10px 0;
 
-  /* Escondendo com opacidade para animar */
+  /* Animação */
   opacity: 0;
   visibility: hidden;
-  transform: translateY(10px);
-  transition: var(--transition-fast);
-  display: block; /* Mantém block, controlamos visibilidade */
+  transform: translateY(15px);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: block;
 }
 
+/* Seta apontando para cima (Detalhe Premium) */
+.submenu::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 20px;
+  width: 12px;
+  height: 12px;
+  background-color: rgba(255, 255, 255, 0.95);
+  transform: rotate(45deg);
+  border-top: 1px solid rgba(255, 255, 255, 0.6);
+  border-left: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+/* Estado Hover (Quando aparece) */
 .has-submenu:hover .submenu {
   opacity: 1;
   visibility: visible;
@@ -186,18 +272,22 @@ nav ul li a.active {
 }
 
 .submenu li a {
-  padding: 12px 20px;
-  text-transform: none;
-  font-weight: 400;
-  font-size: 0.9rem;
-  color: var(--text-light);
-  border-bottom: none;
+  color: var(--text-color) !important; /* Preto/Azul Escuro */
+  text-shadow: none !important; /* Remove a sombra de texto do menu principal */
+  font-weight: 400 !important; /* Fonte normal (não negrito) */
 }
 
+/* Efeito ao passar o mouse no item do submenu */
 .submenu li a:hover {
-  background-color: transparent;
-  color: var(--primary-color);
-  padding-left: 25px; /* Pequeno deslocamento para a direita */
+  color: var(--primary-color) !important; /* Vinho no hover */
+  background-color: rgba(0, 0, 0, 0.05) !important; /* Fundo cinza bem leve */
+}
+
+/* Correção da setinha do submenu (se estiver branca também) */
+.submenu::before {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.95);
 }
 
 /* =========================================
@@ -217,35 +307,50 @@ nav ul li a.active {
 
 /* Text Overlay Flutuante */
 .hero-text-overlay {
-  padding: 60px 40px;
-  background: linear-gradient(
-    135deg,
-    rgba(141, 44, 35, 0.95) 0%,
-    rgba(90, 26, 21, 0.98) 100%
-  );
-  color: var(--white);
-  border-radius: 0;
-  text-align: center;
-  position: relative;
-  z-index: 2;
-  box-shadow: var(--shadow-md);
+  /* Vidro fosco mais escuro para o texto branco estourar */
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(15px);
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+
+  /* Mantém as outras configs de tamanho/padding */
+  border-radius: 20px;
+  padding: 50px 40px;
 }
 
-/* Estilo específico para páginas internas (Objetivos, Apresentação) */
-#hero-apresentacao .hero-text-overlay {
-  background: linear-gradient(135deg, #1a237e 0%, #4a148c 100%);
+.hero-text-overlay:hover {
+  transform: scale(1.02); /* Cresce levemente */
+  background: rgba(8, 20, 15, 0.75); /* Fica mais sólido para leitura */
+}
+
+.welcome-section,
+.about-section,
+section {
+  background-color: transparent !important; /* O !important garante que sobrescreva tudo */
+  padding: 80px 0;
 }
 
 .hero-text-overlay h1 {
   font-size: 2.5rem;
   margin-bottom: 15px;
   letter-spacing: 1px;
+  display: inline-block;
 }
 
 .hero-text-overlay h2 {
   font-size: 1.2rem;
   font-weight: 300;
   opacity: 0.9;
+  display: inline-block;
+}
+.letter-wave {
+  display: inline-block; /* Obrigatório para animar transform/scale */
+  animation: letterWave 6s ease-in-out infinite; /* 2.5s para a onda passar suave */
+  will-change: transform, color;
+}
+.hero-text-overlay h2 .letter-wave {
+  animation-duration: 6s; /* Um pouco mais lento/calmo que o título */
 }
 
 .hero-img {
@@ -261,22 +366,10 @@ nav ul li a.active {
    ========================================= */
 
 .hero-section-aux {
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-  padding: 0;
-
-  /* DIFERENÇA 1: Altura Compacta */
-  /* Removemos a altura automática da imagem e fixamos uma altura elegante para títulos */
-  min-height: 180px;
-
-  /* Centralização do Conteúdo */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  /* Mantemos o fundo colorido base (caso o gradiente falhe) */
-  background-color: var(--primary-dark);
+  background: transparent !important; /* Força transparência */
+  animation: none; /* Remove a animação duplicada que causava desincronia */
+  box-shadow: none; /* Remove sombra que cria linha divisória */
+  border: none;
 }
 
 /* Ajuste do Texto/Fundo dentro do Hero Auxiliar */
@@ -309,19 +402,6 @@ nav ul li a.active {
   margin-bottom: 0;
 }
 
-/* --- MANTENDO OS GRADIENTES ESPECÍFICOS --- */
-/* Como mudamos a classe, precisamos garantir que os gradientes continuem funcionando.
-   Se você aplicava o gradiente no ID #hero-apresentacao, vamos aplicar direto na section agora. */
-
-#hero-apresentacao.hero-section-aux {
-  background: linear-gradient(135deg, #1a237e 0%, #4a148c 100%);
-}
-
-/* Exemplo para outras páginas (basta mudar o ID no HTML) */
-#hero-objetivos.hero-section-aux {
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-}
-
 /* =========================================
    SEÇÕES DE CONTEÚDO
    ========================================= */
@@ -329,23 +409,41 @@ section {
   padding: 80px 0;
 }
 
+.section-title {
+  margin-bottom: 60px; /* Dá um respiro bom antes do conteúdo começar */
+  position: relative;
+  z-index: 2; /* Garante que fique acima de qualquer decoração */
+}
+
 .section-title h2 {
-  font-size: 2.2rem;
-  color: var(--primary-color);
-  margin-bottom: 30px;
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  color: var(--primary-color); /* Vinho */
+  margin-bottom: 15px;
   position: relative;
   display: inline-block;
 }
 
-/* Detalhe visual abaixo dos títulos */
+/* A Linha Dourada Embaixo do Título */
 .section-title h2::after {
   content: "";
   display: block;
-  width: 60px;
-  height: 4px;
-  background: var(--secondary-color);
-  margin-top: 10px;
+  width: 80px; /* Largura da linha */
+  height: 4px; /* Espessura */
+  background: var(--secondary-color); /* Dourado */
+  margin: 10px auto 0; /* Centraliza a linha */
   border-radius: 2px;
+}
+
+/* O Subtítulo (P) */
+.section-title p {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  color: #4a5568; /* Um cinza azulado elegante (não use preto puro) */
+  max-width: 700px; /* Impede que o texto fique muito largo na tela */
+  margin: 0 auto; /* Centraliza o bloco de texto */
+  line-height: 1.6;
+  font-weight: 400;
 }
 
 /* =========================================
@@ -372,12 +470,64 @@ section {
   grid-template-columns: 1fr 1fr;
 }
 
-/* Galeria */
-.gallery-item {
-  overflow: hidden;
+/* =========================================
+   GALERIA CAROUSEL (LOOP INFINITO)
+   ========================================= */
+
+/* A Janela que esconde o que está fora da tela */
+.carousel-window {
+  width: 100%;
+  overflow: hidden; /* O SEGREDO: Esconde a barra de rolagem */
+  position: relative;
+  padding: 20px 0; /* Espaço para a sombra não cortar */
+}
+
+/* O Trilho que segura todas as fotos (Originais + Duplicadas) */
+.carousel-track {
+  display: flex;
+  width: max-content; /* Permite que o trilho seja mais largo que a tela */
+
+  /* A ANIMAÇÃO */
+  /* Move o trilho para a esquerda infinitamente */
+  animation: scrollCarousel 40s linear infinite;
+}
+
+/* Pausa a animação quando passa o mouse (Melhor experiência de usuário) */
+.carousel-track:hover {
+  animation-play-state: paused;
+}
+
+/* Cada Item do Carousel */
+.slide {
+  width: 300px; /* Tamanho fixo para padronizar */
+  flex-shrink: 0; /* Impede que a imagem encolha */
+  margin-right: 20px; /* Espaço entre as fotos (Substitui o gap para cálculo perfeito) */
+
   border-radius: 12px;
+  overflow: hidden;
   box-shadow: var(--shadow-sm);
-  margin: 0;
+  transition: transform 0.3s ease;
+}
+
+.slide:hover {
+  transform: scale(1.05); /* Leve zoom ao focar */
+  box-shadow: var(--shadow-md);
+}
+
+.slide img {
+  width: 100%;
+  height: 220px; /* Altura fixa */
+  object-fit: cover; /* Garante que a foto preencha sem distorcer */
+  display: block;
+}
+
+.gallery-item {
+  padding: 0; /* Galeria não tem padding interno */
+  overflow: hidden;
+}
+.welcome-section .container {
+  position: relative;
+  z-index: 2;
 }
 
 .gallery-item img {
@@ -393,23 +543,16 @@ section {
 }
 
 /* Cards Informativos e Links */
-.info-card,
-.link-card,
-.step-card {
-  background: var(--white);
-  color: var(--text-dark);
-  padding: 35px;
-  border-radius: 12px;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition-fast);
-  border: 1px solid rgba(0, 0, 0, 0.03);
-}
 
 .info-card:hover,
-.link-card:hover,
-.step-card:hover {
-  transform: translateY(-10px); /* Levanta o card */
-  box-shadow: var(--shadow-md);
+.step-card:hover,
+.gallery-item:hover,
+.link-card:hover {
+  transform: translateY(-5px); /* Sobe levemente */
+  background-color: #ffffff; /* Fica branco puro (100%) */
+  border-color: var(--secondary-color); /* Borda dourada sutil */
+  box-shadow: 0 15px 40px rgba(139, 69, 19, 0.15); /* Sombra mais forte */
+  transition: all 0.3s ease;
 }
 
 .info-card h3 {
@@ -419,24 +562,24 @@ section {
 }
 
 .icon-wrapper {
-  font-size: 2.5rem;
+  font-size: 3rem;
   margin-bottom: 15px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 /* Link Cards Específicos */
 .link-card {
-  background: var(--primary-color); /* Fundo colorido para links de destaque */
-  color: var(--white);
-  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
+  background: var(--primary-color); /* Fundo Vinho */
+  color: white !important; /* Texto Branco */
 }
 
 .link-card:hover {
   background: var(--primary-dark);
-  transform: translateY(-5px);
+  color: white;
 }
 
 .link-content {
@@ -451,15 +594,17 @@ section {
    SEÇÃO DE INSCRIÇÃO
    ========================================= */
 .registration-section {
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-  color: var(--white);
-  position: relative;
+  /* Substitui o gradiente azul antigo por um vidro escuro elegante */
+  background: rgba(10, 30, 50, 0.6);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
-  /* O SEGREDO ESTÁ AQUI: */
-  height: auto !important; /* Força a altura a se adaptar ao conteúdo */
-  min-height: 100%; /* Garante que ocupe espaço */
-  overflow: visible !important; /* Deixa o conteúdo vazar se necessário, sem cortar */
-  padding-bottom: 100px; /* Espaço extra no final para o azul não acabar antes */
+  /* Mantém as configurações de altura que arrumamos antes */
+  height: auto !important;
+  min-height: 100%;
+  overflow: visible !important;
+  padding-bottom: 100px;
 }
 
 /* Círculos decorativos no fundo */
@@ -689,6 +834,151 @@ section {
   z-index: 10; /* Garante que fique por cima de tudo */
   border: 3px solid #fff; /* Borda branca para destacar do fundo azul */
 }
+
+/* =========================================
+   ESTILO UNIVERSAL DE CARDS (PADRONIZAÇÃO)
+   ========================================= */
+
+/* Lista de todos os lugares que têm texto */
+.welcome-text,
+.text-content,
+.info-card,
+.step-card,
+.link-card,
+.registration-wrapper,
+.content-wrapper {
+  /* O VIDRO LEITOSO */
+  background-color: rgba(255, 255, 255, 0.94); /* Branco 94% opaco */
+  backdrop-filter: blur(12px); /* Desfoque do fundo */
+  -webkit-backdrop-filter: blur(12px);
+
+  /* FORMATO */
+  border-radius: 20px; /* Bordas bem arredondadas */
+  padding: 40px; /* Muito espaço interno (Respiro) */
+  margin-bottom: 30px; /* Espaço entre um card e outro */
+
+  /* ACABAMENTO */
+  border: var(--card-border);
+  box-shadow: var(--card-shadow);
+  color: var(--text-color); /* Força a cor do texto escura */
+}
+
+/* Removemos estilos conflitantes de divs internas para não quebrar o layout */
+.content-wrapper .text-content {
+  box-shadow: none;
+  background: none;
+  padding: 0;
+  border: none;
+  margin: 0;
+}
+/* =========================================
+   TIPOGRAFIA PADRONIZADA
+   ========================================= */
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading);
+  color: var(--primary-color); /* Vinho para títulos */
+  margin-top: 0;
+  line-height: 1.3;
+}
+
+/* Títulos de Seção (H2) */
+.section-title h2 {
+  font-size: 2.2rem;
+  margin-bottom: 20px;
+  position: relative;
+  display: inline-block;
+}
+
+/* Linha decorativa embaixo do título */
+.section-title h2::after {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 3px;
+  background: var(--secondary-color); /* Dourado */
+  margin-top: 8px;
+  border-radius: 2px;
+}
+
+/* Parágrafos (P) */
+p {
+  font-size: 1.05rem; /* Levemente maior que o padrão */
+  margin-bottom: 20px;
+  color: #2d3748; /* Cinza escuro para não cansar a vista */
+  text-align: justify; /* Texto alinhado fica mais organizado academicamente */
+}
+
+/* Listas (UL, OL) dentro dos cards */
+.check-list li,
+ul li {
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+/* Correção do Rodapé da Inscrição */
+.registration-footer {
+  grid-column: 1 / -1; /* O PULO DO GATO: Faz ocupar a largura total do grid */
+  width: 100%;
+  margin-top: 40px; /* Dá um respiro dos cards de cima */
+
+  /* Centralização extra garantida */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================================
+   CENTRALIZAÇÃO DOS RODAPÉS (CORREÇÃO)
+   ========================================= */
+
+/* 1. Rodapé da Seção de Inscrição (.registration-footer) */
+.registration-footer {
+  grid-column: 1 / -1; /* Ocupa a largura total (Correção anterior) */
+  width: 100%;
+  margin-top: 40px;
+
+  /* Centraliza a "caixa" */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  /* Centraliza o TEXTO dentro da caixa */
+  text-align: center;
+}
+
+/* Força os parágrafos internos a centralizarem o texto também */
+.registration-footer p {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 800px; /* Evita que o texto fique muito esticado em telas grandes */
+}
+
+/* 2. Rodapé Principal do Site (#main-footer) - Garantia */
+#main-footer {
+  text-align: center; /* Garante que o copyright fique no meio */
+}
+
+#main-footer p {
+  text-align: center;
+  margin: 0;
+}
+
+/* Ajuste específico para Mobile */
+@media (max-width: 768px) {
+  .welcome-text,
+  .text-content,
+  .info-card,
+  .step-card {
+    padding: 25px; /* Menos espaço no celular */
+  }
+}
 /* =========================================
    MEDIA QUERY (CELULAR) - VERSÃO CORRIGIDA
    ========================================= */
@@ -739,7 +1029,7 @@ section {
     padding: 20px;
     font-size: 1.2rem;
     display: block;
-    color: var(--text-dark);
+    color: var(--text-light);
   }
 
   /* 3. Submenus no Mobile (Estilo Sanfona) */
@@ -871,22 +1161,6 @@ section {
     padding: 15px 10px; /* Reduz um pouco o padding lateral se necessário */
     width: 100%; /* Garante que use a largura disponível */
   }
-}
-
-/* Animação suave para o submenu */
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* --- RESPONSIVIDADE PARA CELULAR --- */
-@media (max-width: 768px) {
   .welcome-grid {
     grid-template-columns: 1fr; /* Vira uma coluna só */
     gap: 30px;
@@ -905,5 +1179,136 @@ section {
   .welcome-text h2 {
     font-size: 2.5rem; /* Título menor no celular */
     text-align: center;
+  }
+}
+
+/* Animação suave para o submenu */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================
+   ANIMAÇÃO 1: FLORESTA VIVA (Fundo)
+   ========================================= */
+@keyframes forestFlow {
+  0% {
+    background-position: 0% 50%;
+    background-size: 300% 300%; /* Tamanho normal */
+    filter: brightness(1) saturate(1); /* Luz normal */
+  }
+  25% {
+    background-position: 50% 100%;
+    background-size: 320% 320%; /* Leve zoom (respiração) */
+    filter: brightness(1.2) saturate(1.2); /* BRILHO: Luz do sol batendo */
+  }
+  50% {
+    background-position: 100% 50%;
+    background-size: 300% 300%; /* Volta ao normal */
+    filter: brightness(1) saturate(1);
+  }
+  75% {
+    background-position: 50% 0%;
+    background-size: 340% 340%; /* Zoom maior (movimento profundo) */
+    filter: brightness(1.1) saturate(1.3); /* Cores muito vivas */
+  }
+  100% {
+    background-position: 0% 50%;
+    background-size: 300% 300%;
+    filter: brightness(1) saturate(1);
+  }
+}
+
+/* =========================================
+   ANIMAÇÃO 2: BORDA PULSANTE (Merge)
+   ========================================= */
+@keyframes borderGlow {
+  0%,
+  100% {
+    border-color: rgba(184, 31, 31, 0.719);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 15px rgba(250, 10, 10, 0.2);
+  }
+  50% {
+    border-color: rgb(255, 0, 0); /* Borda fica forte */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 35px rgba(233, 10, 10, 0.6); /* Brilho expande */
+  }
+}
+
+@keyframes letterWave {
+  0%,
+  100% {
+    color: #ffffff;
+    transform: translateY(0) scale(1);
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    color: #0592e4; /* Dourado no pico da onda */
+    transform: translateY(-10px) scale(1.1); /* Sobe e cresce */
+    text-shadow: 0 0 15px rgba(8, 23, 223, 0.8);
+  }
+}
+
+@keyframes scrollCarousel {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    /* Movemos -50% porque o trilho tem 2 cópias exatas.
+       Quando a primeira cópia acaba, a segunda está exatamente
+       onde a primeira começou, criando a ilusão de infinito. */
+    transform: translateX(-50%);
+  }
+}
+
+/* Ajuste Mobile: Imagens um pouco menores */
+@media (max-width: 768px) {
+  .slide {
+    width: 220px;
+    margin-right: 15px;
+  }
+
+  .slide img {
+    height: 180px;
+  }
+}
+
+@keyframes jungleBreeze {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes forestFlowBg {
+  0% {
+    background-position: 0% 50%;
+    background-size: 300% 300%;
+  }
+  25% {
+    background-position: 50% 100%;
+    background-size: 320% 320%; /* Leve zoom respirando */
+  }
+  50% {
+    background-position: 100% 50%;
+    background-size: 300% 300%;
+  }
+  75% {
+    background-position: 50% 0%;
+    background-size: 340% 340%;
+  }
+  100% {
+    background-position: 0% 50%;
+    background-size: 300% 300%;
   }
 }
