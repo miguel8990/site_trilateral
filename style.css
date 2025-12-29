@@ -205,9 +205,14 @@ nav ul li a.active {
    ========================================= */
 .hero-section {
   width: 100%;
-  height: auto;
+  padding: 0;
+  height: 100vh;
   overflow: hidden;
   position: relative;
+}
+.hero-content {
+  width: 100%;
+  height: 100%;
 }
 
 /* Text Overlay Flutuante */
@@ -245,10 +250,76 @@ nav ul li a.active {
 
 .hero-img {
   width: 100%;
-  height: auto;
-  display: block;
-  /* Efeito de zoom suave na imagem de fundo seria feito com JS ou container extra, 
-     mas vamos manter simples e leve aqui */
+  height: 100%; /* Força a imagem a pegar toda a altura disponível */
+  object-fit: cover; /* O PULO DO GATO: Corta as bordas da imagem se necessário para preencher tudo sem esticar/deformar */
+  object-position: center; /* Centraliza o corte */
+  display: block; /* Remove a "linha fantasma" que fica embaixo de imagens */
+}
+
+/* =========================================
+   HERO AUXILIAR (Páginas Internas)
+   ========================================= */
+
+.hero-section-aux {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+
+  /* DIFERENÇA 1: Altura Compacta */
+  /* Removemos a altura automática da imagem e fixamos uma altura elegante para títulos */
+  min-height: 180px;
+
+  /* Centralização do Conteúdo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Mantemos o fundo colorido base (caso o gradiente falhe) */
+  background-color: var(--primary-dark);
+}
+
+/* Ajuste do Texto/Fundo dentro do Hero Auxiliar */
+.hero-section-aux .hero-text-overlay {
+  /* DIFERENÇA 2: Removemos paddings exagerados */
+  padding: 30px 20px;
+
+  /* Removemos bordas e sombras para ficar mais "clean" e integrado */
+  box-shadow: none;
+  border-radius: 0;
+  width: 100%;
+  height: 100%;
+
+  /* Centralização */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Ajuste dos Títulos para serem menores nas internas */
+.hero-section-aux h1 {
+  font-size: 2rem; /* Menor que os 2.5rem da Home */
+  margin-bottom: 5px;
+}
+
+.hero-section-aux h2 {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin-bottom: 0;
+}
+
+/* --- MANTENDO OS GRADIENTES ESPECÍFICOS --- */
+/* Como mudamos a classe, precisamos garantir que os gradientes continuem funcionando.
+   Se você aplicava o gradiente no ID #hero-apresentacao, vamos aplicar direto na section agora. */
+
+#hero-apresentacao.hero-section-aux {
+  background: linear-gradient(135deg, #1a237e 0%, #4a148c 100%);
+}
+
+/* Exemplo para outras páginas (basta mudar o ID no HTML) */
+#hero-objetivos.hero-section-aux {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
 }
 
 /* =========================================
