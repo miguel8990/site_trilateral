@@ -216,4 +216,15 @@ document.addEventListener("DOMContentLoaded", () => {
       container.appendChild(wind);
     }
   }
+
+  const footerText = document.querySelector("#main-footer .footer-content p");
+
+  if (footerText) {
+    // Usamos innerHTML para permitir negrito (strong) e quebra de linha se necessário
+    footerText.innerHTML = `
+      © 2026 Iniciativa Amazônia + 10.<br>
+      <strong>Realização:</strong> Universidade do Estado do Amazonas (UEA).<br>
+      <strong>Apoio:</strong> Université Jean Moulin Lyon 3, Université de Guyane, Embaixada da França no Brasil.
+    `;
+  }
 });
