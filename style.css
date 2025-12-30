@@ -47,13 +47,12 @@ body {
   /* O GRADIENTE AMAZÔNICO VIBRANTE */
   /* Aplicado APENAS aqui para garantir uniformidade total */
   background: linear-gradient(
-    -45deg,
-    #0c795d,
-    /* Verde Escuro */ #48e780,
-    /* Verde Mata */ #349cc9,
-    /* Azul Petróleo */ #2e58ca,
-    #094ee0,
-    /* Azul Rio */ #2bb15e
+    -30deg,
+    #021024,
+    #052e16,
+    #0ea5e9,
+    #0120aa,
+    #03b97d
   );
 
   /* Configuração da Animação */
