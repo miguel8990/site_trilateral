@@ -86,6 +86,21 @@ body::before {
   transition: background 0.1s ease; /* Suaviza o movimento */
 }
 
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Deixa clicar através dela */
+  z-index: -1; /* Fica logo acima do gradiente de fundo */
+  opacity: 0.07; /* Bem sutil */
+
+  /* Padrão de Ruído (Noise) gerado via CSS */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
+}
+
 h1,
 h2,
 h3 {
@@ -854,7 +869,7 @@ section {
 
   /* FORMATO */
   border-radius: 20px; /* Bordas bem arredondadas */
-  padding: 40px; /* Muito espaço interno (Respiro) */
+  padding: 20px; /* Muito espaço interno (Respiro) */
   margin-bottom: 30px; /* Espaço entre um card e outro */
 
   /* ACABAMENTO */
@@ -863,14 +878,58 @@ section {
   color: var(--text-color); /* Força a cor do texto escura */
 }
 
-/* Removemos estilos conflitantes de divs internas para não quebrar o layout */
-.content-wrapper .text-content {
-  box-shadow: none;
-  background: none;
-  padding: 0;
-  border: none;
-  margin: 0;
+/* =========================================
+   ESTILO DUPLA CAMADA (MOLDURA & CONTEÚDO)
+   ========================================= */
+
+/* 1. O WRAPPER (A Sombra/Moldura Estilosa) */
+/* Ele atua como uma base de vidro semi-transparente atrás do texto */
+.content-wrapper {
+  /* Fundo: Um vidro bem transparente e sutil */
+  background: rgba(255, 255, 255, 0.2);
+
+  /* Borda fina e brilhante para definir o limite */
+  border: 1px solid rgba(255, 255, 255, 0.4);
+
+  /* Sombra difusa colorida (O "Glow" que você pediu) */
+  /* Pega um tom esverdeado/azulado para combinar com o fundo */
+  box-shadow: 0 20px 50px rgba(0, 20, 40, 0.15);
+
+  /* Espaçamento interno: Isso cria a "borda" visível ao redor do texto */
+  padding: 15px;
+
+  /* Arredondamento maior que o do filho para encaixar */
+  border-radius: 24px;
+
+  /* Margem para separar dos outros elementos */
+  margin-bottom: 40px;
+
+  /* Efeito de vidro (Blur) no fundo */
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
+
+/* 2. O TEXT-CONTENT (O Cartão Principal) */
+/* Este é o "papel" onde o texto vive, flutuando sobre a moldura */
+.content-wrapper .text-content {
+  /* Fundo Branco Leitoso (Legibilidade máxima) */
+  background: rgba(255, 255, 255, 0.96) !important;
+
+  /* Restaura o padding interno para o texto não colar na borda */
+  padding: 40px !important;
+
+  /* Arredondamento um pouco menor para encaixar dentro do wrapper */
+  border-radius: 16px !important;
+
+  /* Sombra suave para "levantar" do wrapper */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+
+  /* Garante que ocupe o espaço */
+  width: 100% !important;
+  margin: 0 !important;
+  border: none !important; /* Removemos a borda do filho para não ficar duplo */
+}
+
 /* =========================================
    TIPOGRAFIA PADRONIZADA
    ========================================= */
@@ -1180,6 +1239,14 @@ ul li {
     font-size: 2.5rem; /* Título menor no celular */
     text-align: center;
   }
+  .content-wrapper {
+    padding: 10px; /* Borda mais fina no celular */
+    border-radius: 20px;
+  }
+  .content-wrapper .text-content {
+    padding: 25px !important; /* Texto com respiro adequado */
+    border-radius: 14px !important;
+  }
 }
 
 /* Animação suave para o submenu */
@@ -1256,13 +1323,13 @@ ul li {
 
 @keyframes scrollCarousel {
   0% {
-    transform: translateX(0);
+    /* Começa deslocado (mostrando a metade duplicada) */
+    transform: translateX(-50%);
   }
   100% {
-    /* Movemos -50% porque o trilho tem 2 cópias exatas.
-       Quando a primeira cópia acaba, a segunda está exatamente
-       onde a primeira começou, criando a ilusão de infinito. */
-    transform: translateX(-50%);
+    /* Termina na posição inicial (0) */
+    /* Isso cria o movimento visual para a DIREITA --> */
+    transform: translateX(0);
   }
 }
 
@@ -1310,5 +1377,366 @@ ul li {
   100% {
     background-position: 0% 50%;
     background-size: 300% 300%;
+  }
+}
+
+/* =========================================
+   ALINHAMENTO DE TEXTO (CENTRALIZAR E JUSTIFICAR)
+   ========================================= */
+
+/* 1. Regra Geral para as Molduras/Cards */
+.content-wrapper .text-content,
+.info-card,
+.step-card,
+.welcome-text {
+  /* O texto do corpo fica justificado (retinho dos dois lados) */
+  text-align: justify;
+  text-justify: inter-word; /* Melhora o espaçamento das palavras */
+}
+
+/* 2. Exceção para Títulos (Devem ficar no centro) */
+.content-wrapper h2,
+.content-wrapper h3,
+.info-card h3,
+.step-card h3,
+.welcome-text h2 {
+  text-align: center;
+  margin-bottom: 25px; /* Garante espaço entre o título e o texto */
+}
+
+/* 3. Centralizar Botões */
+/* Como o pai está justificado, o botão precisa de margem automática para ir pro meio */
+.content-wrapper .btn-download,
+.content-wrapper .btn-submit,
+.welcome-text .btn-submit {
+  display: table; /* Comporta-se como bloco para aceitar margem */
+  margin: 40px auto 0; /* 40px em cima, automático nos lados (centro), 0 embaixo */
+}
+
+/* 4. Ajuste para Listas (Bolinha alinhada com o texto) */
+.check-list,
+ul {
+  text-align: left; /* Listas ficam estranhas se justificadas, melhor à esquerda */
+  padding-left: 40px; /* Garante que as bolinhas fiquem dentro da caixa */
+}
+
+/* Ajuste Mobile: Texto à esquerda pode ser melhor em telas muito pequenas para evitar buracos */
+@media (max-width: 480px) {
+  .content-wrapper .text-content,
+  .info-card,
+  .step-card {
+    text-align: left; /* Volta para a esquerda no celular para não criar espaços grandes entre palavras */
+  }
+
+  .content-wrapper h2,
+  .content-wrapper h3 {
+    text-align: center; /* Títulos continuam centralizados */
+  }
+}
+
+/* =========================================
+   CORREÇÃO DEFINITIVA: CENTRALIZAR TÍTULOS
+   ========================================= */
+
+/* 1. Força a caixa do título a centralizar tudo dentro dela */
+.section-title {
+  text-align: center !important; /* O !important vence qualquer outra regra */
+  width: 100%;
+  margin-bottom: 30px;
+  display: block; /* Garante que ocupe a linha toda */
+}
+
+/* 2. O Título H2 */
+.section-title h2 {
+  display: inline-block; /* Necessário para a linha dourada ficar do tamanho do texto */
+  margin: 0 auto; /* Centraliza o bloco do H2 */
+  color: var(--primary-color);
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  position: relative;
+}
+
+/* 3. A Linha Dourada (Garantia de Centralização) */
+.section-title h2::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: var(--secondary-color);
+  margin: 10px auto 0 auto; /* O 'auto' nas laterais força o centro */
+  border-radius: 2px;
+}
+
+/* 4. Títulos que estão soltos dentro do texto (como H3) */
+/* Isso garante que subtítulos como "A Proposta" também centralizem */
+.text-content h2,
+.text-content h3,
+.info-card h3 {
+  text-align: center !important;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+/* 5. Mantém o texto comum Justificado (Retinho) */
+/* Apenas parágrafos (p) e listas (ul) ficam justificados/esquerda */
+.text-content p,
+.info-card p {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+/* =========================================
+   ANIMAÇÃO DE FOLHAS CAINDO (AMAZÔNIA)
+   ========================================= */
+
+.leaves-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* O clique passa direto por elas */
+  z-index: 0; /* Fica na frente do fundo, mas atrás do texto (se o texto tiver z-index 2) */
+  overflow: hidden;
+}
+
+/* O Desenho da Folha (Sem Imagem!) */
+.leaf {
+  position: absolute;
+  top: -50px; /* Começa escondida lá em cima */
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.3); /* Branco translúcido */
+  border-radius: 0 50% 0 50%; /* Forma de folha (bico em cima e embaixo) */
+
+  /* Sombra para dar profundidade 3D */
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+
+  animation: falling 15s linear infinite;
+}
+
+/* A Dança da Queda */
+@keyframes falling {
+  0% {
+    opacity: 0;
+    transform: translate(0, -20px) rotate(0deg);
+  }
+  10% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    /* Cai para baixo (100vh) e vai para o lado (200px) girando (360deg) */
+    transform: translate(200px, 100vh) rotate(720deg);
+  }
+}
+
+/* =========================================
+   HIERARQUIA DE CAMADAS (FIX DEFINITIVO)
+   ========================================= */
+
+/* Nível 0: As folhas ficam na base (acima apenas do fundo colorido) */
+.leaves-container {
+  z-index: 0 !important;
+}
+
+/* Nível 10: O Conteúdo deve flutuar ACIMA das folhas */
+/* Aplicamos position: relative para o z-index funcionar */
+section,
+header,
+footer,
+.hero-section,
+.hero-section-aux {
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+/* Nível 100: Menus e Popups ficam na frente de tudo */
+header {
+  z-index: 100 !important;
+}
+.leaves-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Clique passa direto */
+  z-index: 0; /* Camada base */
+  overflow: hidden;
+}
+
+.leaf {
+  position: absolute;
+  top: -10%; /* Começa um pouco acima da tela */
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 0 50% 0 50%;
+  opacity: 0; /* Começa invisível até a animação pegar */
+}
+.wind-line {
+  position: fixed;
+  left: -300px; /* Começa bem fora da tela */
+  height: 60px; /* Altura maior para caber o espiral */
+  pointer-events: none;
+  z-index: 1; /* Camada das folhas */
+  background-repeat: no-repeat;
+  background-size: contain; /* Garante que o desenho todo apareça */
+  opacity: 0;
+}
+
+/* ESTILO 1: Espiral para CIMA (Baseado na sua imagem - topo) */
+.wind-style-1 {
+  /* Desenho vetorial de uma onda que termina num loop para cima */
+  background-image: url("data:image/svg+xml,%3Csvg width='300' height='60' viewBox='0 0 300 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,40 C100,50 180,20 260,20 C285,20 295,45 275,50 C260,55 255,35 270,30' stroke='rgba(255, 255, 255, 0.4)' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* ESTILO 2: Espiral para BAIXO (Baseado na sua imagem - fundo) */
+.wind-style-2 {
+  /* Desenho vetorial de uma onda que termina num loop para baixo */
+  background-image: url("data:image/svg+xml,%3Csvg width='300' height='60' viewBox='0 0 300 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,20 C100,10 180,50 250,50 C275,50 285,25 265,20 C250,15 245,35 260,40' stroke='rgba(255, 255, 255, 0.4)' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* A animação em si continua a mesma */
+@keyframes falling {
+  0% {
+    opacity: 0;
+    transform: translate(0, -20px) rotate(0deg);
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    /* MUDANÇA AQUI: */
+    /* translate(X, Y) -> 30vw para a direita, 110vh para baixo */
+    /* Isso faz a folha cair na diagonal, empurrada pelo vento */
+    transform: translate(30vw, 110vh) rotate(720deg);
+  }
+}
+
+@keyframes windTravel {
+  0% {
+    transform: translateX(0) scale(0.8);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8; /* Aparece rápido */
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(120vw) scale(1); /* Atravessa a tela */
+    opacity: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  /* 1. LINKS DO MENU (Forçar cor escura no fundo branco) */
+  /* O !important aqui vence a regra do Desktop que forçava branco */
+  .nav-menu li a {
+    color: var(--text-color) !important; /* Azul Escuro/Preto */
+    text-shadow: none !important; /* Remove a sombra de texto */
+    font-weight: 600 !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05); /* Separador sutil */
+  }
+
+  /* Hover no celular */
+  .nav-menu li a:hover {
+    color: var(--primary-color) !important; /* Vinho ao tocar */
+    background: rgba(0, 0, 0, 0.03) !important;
+  }
+
+  /* 2. O ÍCONE "X" (FECHAR) */
+  /* O problema: A barra estava forçada como branca por causa do header transparente.
+     Solução: Quando o botão tiver a classe .active (menu aberto), forçamos a cor Vinho. */
+
+  .hamburger.active .bar {
+    background-color: var(--primary-color) !important; /* Vinho */
+  }
+
+  /* Garante que as pernas do X fiquem coloridas individualmente também */
+  .hamburger.active .bar:nth-child(1),
+  .hamburger.active .bar:nth-child(3) {
+    background-color: var(--primary-color) !important;
+  }
+
+  .links-grid,
+  .info-grid,
+  .grid-3 {
+    /* Força uma única coluna que se adapta ao espaço disponível */
+    grid-template-columns: 100% !important;
+    display: grid !important; /* Garante que mantenha o comportamento de grid */
+    width: 100% !important; /* Garante que não ultrapasse o pai */
+    padding: 0; /* Remove paddings extras do grid se houver */
+  }
+
+  /* Garante que o card em si não tenha largura fixa */
+  .info-card,
+  .link-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  /* 1. Título de Boas-Vindas (O Gigante) */
+  /* Reduzimos de 3.5rem para 2rem para caber numa linha ou duas bonitas */
+  .welcome-text h2 {
+    font-size: 1.5rem !important;
+    line-height: 1.2;
+    margin-bottom: 15px;
+  }
+
+  /* 2. Títulos de Seção (H2 com linha dourada) */
+  /* Reduzimos para evitar que palavras longas como "Internacional" cortem */
+  .section-title h2 {
+    font-size: 1.2rem !important; /* Era 2.2rem */
+    width: 100%; /* Garante que use a largura toda */
+    padding: 0 10px; /* Evita colar na borda da tela */
+    word-wrap: break-word; /* Se uma palavra for gigante, ela quebra suave */
+  }
+
+  /* 3. Título Principal do Banner (Hero) */
+  .hero-text-overlay h1 {
+    font-size: 1.5rem !important; /* Era 2.5rem */
+    line-height: 1.3;
+  }
+
+  .hero-text-overlay h2 {
+    font-size: 1rem !important;
+    margin-top: 5px;
+  }
+
+  /* 4. Títulos de Cards (H3) */
+  /* Ajuste fino para não ocupar muito espaço vertical */
+  .info-card h3,
+  .step-card h3,
+  .link-content {
+    font-size: 1.2rem !important; /* Era 1.4rem */
+  }
+
+  /* 5. Textos de Parágrafo (Leitura Confortável) */
+  /* Reduzimos levemente para caber mais texto na tela pequena */
+  p,
+  li {
+    font-size: 0.95rem !important; /* Era 1.05rem ou 1rem */
+    line-height: 1.6;
+  }
+
+  /* 6. Ajuste Específico para o E-mail (que costuma vazar) */
+  .email-link {
+    font-size: 1rem !important; /* Reduz para caber na caixa */
+    word-break: break-all; /* Força quebra se não couber */
+  }
+
+  /* 7. Reduz padding do container do título para ganhar espaço */
+  .section-title {
+    margin-bottom: 20px !important; /* Menos espaço em branco */
   }
 }

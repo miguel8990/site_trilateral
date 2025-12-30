@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
   const hamburger = document.querySelector(".hamburger");
   const navMenu = document.querySelector(".nav-menu");
+  createFallingLeaves();
+  createWindEffect();
 
   // ==========================================
   // RASTREADOR DE MOUSE (PARA O FUNDO DINÂMICO)
@@ -106,4 +108,112 @@ document.addEventListener("DOMContentLoaded", () => {
       element.appendChild(span);
     });
   });
+  // ==========================================
+  // GERADOR DE FOLHAS (INFINITE LOOP FIX)
+  // ==========================================
+  function createFallingLeaves() {
+    // 1. Cria o container se ele não existir
+    let container = document.querySelector(".leaves-container");
+    if (!container) {
+      container = document.createElement("div");
+      container.classList.add("leaves-container");
+      // Insere logo no começo do body (para respeitar o z-index 0)
+      document.body.prepend(container);
+    }
+
+    // 2. Configurações
+    const leafCount = 15; // Quantidade de folhas na tela
+
+    // 3. Loop de Criação
+    for (let i = 0; i < leafCount; i++) {
+      const leaf = document.createElement("div");
+      leaf.classList.add("leaf");
+
+      // --- A MÁGICA DA ALEATORIEDADE ---
+
+      // Posição horizontal aleatória (0 a 100%)
+      const leftPos = Math.random() * 100;
+
+      // Tamanho aleatório (variedade visual)
+      const size = Math.random() * 10 + 15; // Entre 15px e 25px
+
+      // Duração da queda aleatória (para não caírem todas juntas)
+      const duration = Math.random() * 10 + 15; // Entre 15s e 25s
+
+      // Atraso NEGATIVO: Isso faz a animação começar "no meio do caminho"
+      // Assim, ao carregar a página, já tem folhas em toda a tela!
+      const delay = Math.random() * -20;
+
+      // Aplica os estilos
+      leaf.style.left = `${leftPos}%`;
+      leaf.style.width = `${size}px`;
+      leaf.style.height = `${size}px`;
+      leaf.style.animation = `falling ${duration}s linear infinite`;
+      leaf.style.animationDelay = `${delay}s`;
+
+      // Adiciona variações de cor (opcional - verde claro e branco)
+      if (Math.random() > 0.7) {
+        leaf.style.background = "rgba(187, 247, 208, 0.4)"; // Verde pálido
+      }
+
+      container.appendChild(leaf);
+    }
+  }
+
+  // ==========================================
+  // GERADOR DE VENTO (ESPIRAIS / CARACOL)
+  // ==========================================
+  function createWindEffect() {
+    let container = document.querySelector(".leaves-container");
+    // Segurança para criar container se não existir
+    if (!container) {
+      container = document.createElement("div");
+      container.classList.add("leaves-container");
+      // Força estilos essenciais caso o CSS falhe
+      container.style.position = "fixed";
+      container.style.zIndex = "1";
+      container.style.pointerEvents = "none";
+      document.body.prepend(container);
+    }
+
+    const windCount = 5; // Poucas linhas para ser elegante
+
+    for (let i = 0; i < windCount; i++) {
+      const wind = document.createElement("div");
+      wind.classList.add("wind-line");
+
+      // A MÁGICA: Escolhe aleatoriamente o desenho 1 ou 2
+      if (Math.random() > 0.5) {
+        wind.classList.add("wind-style-1");
+      } else {
+        wind.classList.add("wind-style-2");
+      }
+
+      // Posição Vertical (Aleatória)
+      const topPos = Math.random() * 85; // Evita o rodapé extremo
+
+      // Tamanho (Largura) - Estica o vento para parecer rajada
+      // Entre 300px e 600px de comprimento
+      const width = Math.random() * 300 + 300;
+
+      // Velocidade (Lento e majestoso: 7s a 12s)
+      const duration = Math.random() * 5 + 7;
+
+      // Atraso inicial
+      const delay = Math.random() * 10;
+
+      // Aplica os estilos
+      wind.style.top = `${topPos}%`;
+      wind.style.width = `${width}px`;
+
+      // Animação suave
+      wind.style.animation = `windTravel ${duration}s linear infinite`;
+      wind.style.animationDelay = `${delay}s`;
+
+      // Opacidade variável (alguns ventos são mais fortes, outros fracos)
+      wind.style.opacity = Math.random() * 0.4 + 0.3;
+
+      container.appendChild(wind);
+    }
+  }
 });
